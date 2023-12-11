@@ -9,7 +9,7 @@ class Professor extends Model
 {
     use HasFactory;
     protected $table = 'professor';
-    protected $fillable = ['nome','matricula','materia','disciplina','carga_horaria','email'];
+    protected $fillable = ['nome','matricula','carga_horaria','email'];
 /*
     public function turma(){
         return $this->belongsTo(\App\Models\Turma::class,'disciplina','id');
