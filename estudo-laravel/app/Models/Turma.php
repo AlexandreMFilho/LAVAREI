@@ -10,12 +10,5 @@ class Turma extends Model
     use HasFactory;
     protected $table = 'turma';
     protected $fillable = ['nome','codigo'];
-    /*
-    public function alunos(){
-        return $this->belongsToMany(\App\Models\Aluno::class,'id_aluno','id');
-    }*/
-    public function professor(){
-        return $this->belongsTo(\App\Models\Professor::class,'id_professor','id');
-    }
-    
+
 }
