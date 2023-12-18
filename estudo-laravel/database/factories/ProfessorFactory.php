@@ -19,12 +19,18 @@ class ProfessorFactory extends Factory
     public function definition(): array
     {
         $n = fake()->name();
+        $e = explode(" ", $n);
         return [
             'nome'=>$n,
             'matricula'=>Str::random(13),
             'carga_horaria'=>mt_rand(0, 100),
-            'email'=>$n[0].$n[1]."@email.com",
+            'email'=>$e[0].$e[1]."@email.com",
             //
         ];
     }
 }
+
+/*
+\App\Models\Professor::factory(1)->create();
+
+*/
