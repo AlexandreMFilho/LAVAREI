@@ -28,5 +28,6 @@ class AlunoFactory extends Factory
             'id_turma'=>$turma[0]->id,
             //
         ];
+        dump($turma);
     }
 }

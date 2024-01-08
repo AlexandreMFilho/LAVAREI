@@ -8,7 +8,7 @@ use Illuminate\Database\Eloquent\Model;
 class DisciplinaProfessor extends Model
 {
     use HasFactory;
-    protected $table = 'disciplinaProfessor';
+    protected $table = 'disciplina_professor';
     protected $fillable = ['id_disciplina','id_professor'];
 
     public function disciplina(){

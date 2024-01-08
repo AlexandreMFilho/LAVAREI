@@ -4,6 +4,8 @@ Com as Seeders devidamente criadas iremos criar uma Seeder que irá chamar todas
 
 ```
 sail artisan migrate --seed
+sail artisan db:seed --class=MinhaSeeder
+php artisan db:seed --class=MinhaSeeder
 ```
 
 Este Seeder terá o nome `DatabaseSeeder.php`, dentro dele:

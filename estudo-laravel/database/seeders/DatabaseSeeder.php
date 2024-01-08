@@ -22,6 +22,8 @@ class DatabaseSeeder extends Seeder
     {
         $this->call([
             DisciplinaSeeder::class,
+            FactorySeeder::class,
         ]);
+        dump('Seed executado com sucesso!');
     }
 }

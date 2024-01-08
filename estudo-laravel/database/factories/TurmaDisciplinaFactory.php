@@ -20,22 +20,17 @@ class TurmaDisciplinaFactory extends Factory
     public function definition(): array
     {   
         $turma = Turma::take(1)->get();
-        //if(count($turma) <= 0){
         if(empty($turma)){
            $turma = Turma::factory(1)->create();
         }
         $disciplina = Disciplina::take(1)->get();
-        //if(count($disciplina) <= 0){
-        if(empty($disciplina)){
-           $disciplina = Disciplina::factory(1)->create();
-        }
+        //if(empty($disciplina)){
+           //TODO criar chamada ao SEEDER caso n tenha.
+        //}
         return [
-            //
-            'id_turma'->$turma[0]->id,
-            'id_disciplina'->$disciplina[0]->id,
+            'id_turma'=>$turma[0]->id,
+            'id_disciplina'=>$disciplina[0]->id,
         ];
     }
 }
 
-
-//TODO TO DO COrrigir
