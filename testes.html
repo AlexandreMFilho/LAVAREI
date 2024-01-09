@@ -1,0 +1,74 @@
+<!DOCTYPE html>
+
+<html lang="pt-br">
+
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>GRÁFICOS DE BARRAS</title>
+    
+    <style>
+    :root{
+        --valor2: 0;
+        --offset2: 0;
+        --offset3: 0;
+        --valor: 0;
+
+    }
+    .circulo{
+        stroke-width: 20;
+        fill:transparent;
+        stroke-dasharray: var(--valor), 200%;
+        stroke: blue;
+    }
+    .circulo2{
+        stroke-width: 20;
+        fill:transparent;
+        stroke-dasharray: var(--valor2), 200%;
+        stroke-dashoffset: var(--offset2);
+        stroke: red;
+    }
+    .circulo3{
+        stroke-width: 20;
+        fill:transparent;
+        stroke-dasharray: var(--valor3), 200%;
+        stroke-dashoffset: var(--offset3);
+        stroke: green;
+    }
+    </style>
+
+    <script>
+        function regra3(x){
+            return ((x*126)/100.0)
+        }
+        function muda(x){
+            document.documentElement.style.setProperty('--valor', x)
+        }
+        function muda2(x,y){
+            document.documentElement.style.setProperty('--valor2', x)
+            document.documentElement.style.setProperty('--offset2', y)
+        }
+        function muda3(x,y){
+            document.documentElement.style.setProperty('--offset3', y)
+            document.documentElement.style.setProperty('--valor3', x)
+        }
+        var valor = 30
+        var valor2 = 30
+        var valor3 = 40
+
+        muda(regra3(valor))
+        muda2(regra3(valor2),regra3(valor*(-1)))
+        muda3(regra3(valor3),regra3((valor2+valor))*(-1))
+
+    </script>
+</head>
+
+<body>
+    <svg viewBox="0 0 100 100" xmlns="http://www.w3.org/2000/svg">
+        <circle cx="50" cy="50" r="20" class="circulo3"/>
+        <circle cx="50" cy="50" r="20" class="circulo2"/>
+        <circle cx="50" cy="50" r="20" class="circulo"/>
+      </svg>
+</body>
+
+</html>
