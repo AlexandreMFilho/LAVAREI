@@ -1,0 +1,103 @@
+<!DOCTYPE html>
+
+<html lang="pt-br">
+
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+
+    <title>GRÁFICOS DE BARRAS</title>
+
+<style>
+    :root {
+        --cor-pri-a: #1393A0ff;
+
+        --cor-pri-b: #64E0EEff;
+    
+        --cor-pri-c: #3EB8F0ff;
+    
+        --cor-pri-d: #42C1FCff;
+    
+        --cor-sec-a: #65c1beff;
+    
+        --cor-sec-b: #704D00ff;
+    
+        --cor-sec-c: #F0A400ff;
+    
+        --cor-sec-d: #FCAD00ff;
+    
+    }
+
+    body{
+        background-color: #ddd;
+    }
+    .grafico-barra{
+        width: 600px;
+        background-color: #ffffff88;
+        border-radius: 15px;
+    }
+    .grafico-barra .barra, 
+    .grafico-barra .pizza {
+        fill: var(--cor-pri-a);
+        transition: 0.5s;
+    }
+    
+    .grafico-barra .barra:hover{
+        fill:var(--cor-sec-c);
+        transition: 0.5s;
+        cursor: default;
+    }
+    
+    .grafico-barra .rotulo:hover{
+        font-size: 1.1rem;
+        transition: 0.5s;
+        cursor: default;
+    }
+    
+    
+    .grafico-barra .titulo{
+        font-size: 1.2rem;
+    }
+    
+    .grafico-barra .pizza{
+        
+        fill: none;
+        stroke-dashoffset: 0;
+        stroke-width: 100;
+    
+    }
+    
+    
+    .pizza.indice-1{
+        stroke: var(--cor-pri-a);
+    }
+    .pizza.indice-2{
+        stroke: var(--cor-pri-b);
+    }
+    .pizza.indice-3{
+        stroke: var(--cor-pri-c);
+    }
+    
+    .grafico-barra .pizza:hover{
+        stroke: var(--cor-sec-c);
+    }
+
+
+    
+    
+</style>
+</head>
+
+<body>
+        <svg viewBox="0 0 600 500" width="600" height="500" class="grafico-barra" style="display: block;">
+            <text x="50" y="40" class="titulo">Hábitos Alimentares</text>
+            <circle cx="50%" cy="50%" r="20%" class="pizza indice-1" style="stroke-dasharray: 470, 800;"></circle>
+            <text x="25" y="75" class="rotulo">1</text><text x="20500 8005" y="75" class="valor">10</text>
+            <circle cx="50%" cy="50%" r="20%" class="pizza indice-2" style="stroke-dasharray: 170, 800;"></circle>
+            <text x="25" y="115" class="rotulo">2</text><text x="20100 8005" y="115" class="valor">10</text>
+            <circle cx="50%" cy="50%" r="20%" class="pizza indice-3" style="stroke-dasharray: 20, 800;"></circle>
+            <text x="25" y="155" class="rotulo">3</text><text x="2020 8005" y="155" class="valor">10</text>
+        </svg>
+</body>
+
+</html>
