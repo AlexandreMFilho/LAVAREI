@@ -9,13 +9,27 @@
     <script src="./js.js"></script>
     <link rel="stylesheet" type="text/css" href="../style.css" media="screen" />
 
+    <style>
+        .item {
+            width: 100px;
+            height: 20px;
+            margin: 5px;
+            
+        }
 
+        .nome {
+            width: 100px;
+            height: 20px;
+            margin: 5px;
+        }
+    </style>
 </head>
 
 <body onload="D();">
     <canvas id="myChart" width="400" height="400">
     </canvas>
-    <input class="item" type="text">
+    <input class="item" type="text" placeholder="valor">
+    <input class="nome" type="text" placeholder="nome">
     <button onclick="adicionafatia()">Adicionar Fatia</button>
 </body>
 
