@@ -9,7 +9,7 @@ function adicionafatia(){
   if(x < 0){
     alert("Valor negativo");
     // horarioOuAntiHorario = true;
-  }else{
+  }else{ 
     horarioOuAntiHorario = false;
   }
   if(total <= 100){
@@ -22,7 +22,8 @@ function adicionafatia(){
     D(x);
     console.log(fatia);
   }else{
-    alert("Valor total maior que 100");
+    alert(`Valor total ${total} maior que 100`);
+    total = total - Number(x);
   }
 }
 
@@ -54,14 +55,9 @@ function D(val){
   
   // pizza.setAttribute("hover", alert(fatia[fatiasatual].rotulo+": "+val+"%"));
 }
-function regra3(x){
-  return ((x*126)/100.0)
-}
 
 function degrees_to_radians(degrees)
 {
   var pi = Math.PI;
   return degrees * (pi/180);
 }
-
-console.log(degrees_to_radians(45));
