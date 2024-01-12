@@ -1,6 +1,51 @@
-var fatiasatual =0, total = 0;
-var fatia = [{"valor":0,"offset":0,"cor":"#000000","rotulo":"","pizza":""}];
+var fatiasatual = 0, total = 0;
+var pizza = [{numero:0,
+              valor:0,
+              offset:0,
+              cor:"#000000",
+              rotulo:""}];
 var cx = 100, cy = 75, r = 50;
+
+const fatia={
+  numero:fatiasatual,
+  valor:0,
+  offset:0,
+  cor:"#000000",
+  rotulo:"",
+  construtor: function(valor,rotulo){
+    if(valor < 0){
+      alert(`Valor ${valor} negativo foi convertido para positivo`);
+      valor = valor * -1;
+    }
+    this.valor = valor;
+    this.rotulo = rotulo;
+    this.cor = "#"+((1<<24)*Math.random()|0).toString(16);
+    // this.offset = 0;
+    if(fatiasatual > 1){
+      this.offset = Number(pizza[fatiasatual-1].valor)+Number(pizza[fatiasatual-1].offset);
+    }
+      total += Number(valor);
+    if(total <= 100){
+      fatiasatual++;
+      //adicionafatia(valor);
+    }else{
+      alert(`Valor total ${total} maior que 100`);
+      total -= Number(x);
+    }
+    console.log(this);
+
+    
+    //novafatia(this.valor,this.rotulo);
+    return this;
+  }
+
+
+
+
+}
+
+// pizza.push(fatia.construtor(10,"a"));
+
 
 function context(){
   canvas = document.getElementById("myChart");
@@ -13,35 +58,31 @@ function context(){
   }
 }
 
-function novafatia(){
+function novafatia(valor,rotulo){
   //Aquisição de dados (valor e label)
-  var x = document.getElementsByClassName("item")[0].value;
-  var nome = document.getElementsByClassName("nome")[0].value;
+  //var x = document.getElementsByClassName("item")[0].value;
+  //var nome = document.getElementsByClassName("nome")[0].value;
   
   //Verificação de valor negativo
   //Caso seja negativo, o valor é convertido para positivo e é exibido um alerta
-  if(x < 0){
-    alert("Valor negativo foi convertido para positivo");
-    x = x * -1;
-  }
+  // if(valor < 0){
+  //   alert("Valor negativo foi convertido para positivo");
+  //   valor = valor * -1;
+  // }
   
-  total += Number(x);
+  total += Number(valor);
   if(total <= 100){
-    fatia.push({"valor":x,
-                "offset":Number(fatia[fatiasatual].valor)+Number(fatia[fatiasatual].offset),
-                "cor": "#"+((1<<24)*Math.random()|0).toString(16),
-                "rotulo":nome,
-                "pizza":"",
-              });
+    // this.offset = Number(fatia[fatiasatual].valor)+Number(fatia[fatiasatual].offset),
+    this.offset = Number(pizza[fatiasatual].valor)+Number(pizza[fatiasatual].offset),
     fatiasatual++;
-    adicionafatia(x);
+    //adicionafatia(valor);
     console.log(fatia);
     console.log(ctx);
   }else{
     alert(`Valor total ${total} maior que 100`);
     total -= Number(x);
   }
-  //console.log(total);
+  console.log(total);
 }
 
 function adicionafatia(val){
@@ -72,7 +113,7 @@ function adicionafatia(val){
   // });
   
   // pizza.setAttribute("hover", alert(fatia[fatiasatual].rotulo+": "+val+"%"));
-}
+} 
 
 function degtorad(degrees)
 {
