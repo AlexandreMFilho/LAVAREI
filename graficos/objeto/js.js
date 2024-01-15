@@ -42,9 +42,9 @@ const fatia={
     novafatia.cor = "#"+((1<<24)*Math.random()|0).toString(16);
     novafatia.rotulo = nome;
     
-    var aux = Number(pizza[fatiasatual-1]);
-    novafatia.offset = aux.valor; //+ Number(pizza[Number(aux.numero)-1].offset));
+    novafatia.offset = Number(pizza[fatiasatual-1].valor)+ Number(pizza[Number(aux.numero)-1].offset); //TODO VER PQ N PEGA
     console.log(aux);
+
     fatiasatual++;
     pizza.push(novafatia);
   }
@@ -60,6 +60,7 @@ const fatia={
     var val = document.getElementsByClassName("item")[0].value;
     var nam = document.getElementsByClassName("rotulo")[0].value;
     pizzaria(Number(val),nam);
+    desenha(pizza);
     console.log(pizza);
   }
   
@@ -74,66 +75,90 @@ function context(){
   }
 }
 
-function novafatia(valor,rotulo){
-  //Aquisição de dados (valor e label)
-  //var x = document.getElementsByClassName("item")[0].value;
-  //var nome = document.getElementsByClassName("nome")[0].value;
-  
-  //Verificação de valor negativo
-  //Caso seja negativo, o valor é convertido para positivo e é exibido um alerta
-  // if(valor < 0){
-  //   alert("Valor negativo foi convertido para positivo");
-  //   valor = valor * -1;
-  // }
-  
-  total += Number(valor);
-  if(total <= 100){
-    // this.offset = Number(fatia[fatiasatual].valor)+Number(fatia[fatiasatual].offset),
-    this.offset = Number(pizza[fatiasatual].valor)+Number(pizza[fatiasatual].offset),
-    fatiasatual++;
-    //adicionafatia(valor);
-    console.log(fatia);
-    console.log(ctx);
-  }else{
-    alert(`Valor total ${total} maior que 100`);
-    total -= Number(x);
-  }
-  console.log(total);
-}
-
-function adicionafatia(val){
-
-  var x = Number(fatia[fatiasatual].offset);
-      y = Number(fatia[fatiasatual].offset) + Number(val);
-  ctx.fillStyle = fatia[fatiasatual].cor; //seta a cor da fatia
+function desenha(pizza){
+  for(var i = 0; i < pizza.length; i++){
+    var x = pizza[i].offset;                                         //TODO VER PQ N PEGA
+    var y = pizza[i].offset + pizza[i].valor;                        //TODO VER PQ N PEGA
+    ctx.fillStyle = pizza[i].cor; //seta a cor da fatia
   
   //Desenha a fatia
-  const pizza = new Path2D();
+  const fatia = new Path2D();
   ctx.beginPath();
-  pizza.moveTo(cx, cy);
-  pizza.arc(cx,cy,r,degtorad(x)*3.6,degtorad(y)*3.6,false);
-  pizza.lineTo(cx, cy);
-  ctx.fill(pizza);
-  fatia[fatiasatual].pizza = pizza;
-
+  fatia.moveTo(cx, cy);
+  fatia.arc(cx,cy,r,degtorad(x)*3.6,degtorad(y)*3.6,false);
+  fatia.lineTo(cx, cy);
+  ctx.fill(fatia);
+  
   //Desenha a o bloco da legenda
   const legenda = new Path2D();
-  legenda.rect(200, 20*(fatiasatual), 10, 10);
+  legenda.rect(200, 20*(i), 10, 10);
   ctx.fill(legenda);
   
   //Desenha a o bloco da legenda
-  ctx.fillText(`${fatia[fatiasatual].rotulo}: ${fatia[fatiasatual].valor}%` , 220,10+(20*(fatiasatual)));
+  ctx.fillText(`${pizza[i].rotulo}: ${pizza[i].valor}%` , 220,10+(20*(i)));
+  }
+}
+
+// function novafatia(valor,rotulo){
+//   //Aquisição de dados (valor e label)
+//   //var x = document.getElementsByClassName("item")[0].value;
+//   //var nome = document.getElementsByClassName("nome")[0].value;
   
-  //  pizza.addEventListener("mouseover", function(){
-  //   alert(fatia[fatiasatual].rotulo+": "+val+"%");
-  // });
+//   //Verificação de valor negativo
+//   //Caso seja negativo, o valor é convertido para positivo e é exibido um alerta
+//   // if(valor < 0){
+//   //   alert("Valor negativo foi convertido para positivo");
+//   //   valor = valor * -1;
+//   // }
   
-  // pizza.setAttribute("hover", alert(fatia[fatiasatual].rotulo+": "+val+"%"));
-} 
+//   total += Number(valor);
+//   if(total <= 100){
+//     // this.offset = Number(fatia[fatiasatual].valor)+Number(fatia[fatiasatual].offset),
+//     this.offset = Number(pizza[fatiasatual].valor)+Number(pizza[fatiasatual].offset),
+//     fatiasatual++;
+//     //adicionafatia(valor);
+//     console.log(fatia);
+//     console.log(ctx);
+//   }else{
+//     alert(`Valor total ${total} maior que 100`);
+//     total -= Number(x);
+//   }
+//   console.log(total);
+// }
+
+// function adicionafatia(val){
+
+//   var x = Number(fatia[fatiasatual].offset);
+//       y = Number(fatia[fatiasatual].offset) + Number(val);
+//   ctx.fillStyle = fatia[fatiasatual].cor; //seta a cor da fatia
+  
+//   //Desenha a fatia
+//   const pizza = new Path2D();
+//   ctx.beginPath();
+//   pizza.moveTo(cx, cy);
+//   pizza.arc(cx,cy,r,degtorad(x)*3.6,degtorad(y)*3.6,false);
+//   pizza.lineTo(cx, cy);
+//   ctx.fill(pizza);
+//   fatia[fatiasatual].pizza = pizza;
+
+//   //Desenha a o bloco da legenda
+//   const legenda = new Path2D();
+//   legenda.rect(200, 20*(fatiasatual), 10, 10);
+//   ctx.fill(legenda);
+  
+//   //Desenha a o bloco da legenda
+//   ctx.fillText(`${fatia[fatiasatual].rotulo}: ${fatia[fatiasatual].valor}%` , 220,10+(20*(fatiasatual)));
+  
+//   //  pizza.addEventListener("mouseover", function(){
+//   //   alert(fatia[fatiasatual].rotulo+": "+val+"%");
+//   // });
+  
+//   // pizza.setAttribute("hover", alert(fatia[fatiasatual].rotulo+": "+val+"%"));
+// } 
 
 function degtorad(degrees)
 {
   var pi = Math.PI;
   return degrees * (pi/180);
 }
-console.log(`pizza:${pizza}`);
+// console.log(`pizza:${pizza}`);
