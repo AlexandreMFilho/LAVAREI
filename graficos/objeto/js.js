@@ -49,11 +49,17 @@ const fatia={
     pizza.push(novafatia);
   }
 
+  function pedido(fat){
+    for(var i = 0; i < fat.length; i++){
+      pizzaria(fat[i].valor,fat[i].rotulo);
+    }
+  }
+
   
   function adicionarFatia(){
     var val = document.getElementsByClassName("item")[0].value;
     var nam = document.getElementsByClassName("rotulo")[0].value;
-    pizzaria(val,nam);
+    pizzaria(Number(val),nam);
     console.log(pizza);
   }
   
