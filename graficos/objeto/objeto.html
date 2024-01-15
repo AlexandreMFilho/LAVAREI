@@ -17,7 +17,7 @@
             
         }
 
-        .nome {
+        .rotulo {
             width: 100px;
             height: 20px;
             margin: 5px;
@@ -25,14 +25,14 @@
     </style>
 </head>
 
-<body onload="context()">
+<body onload="context(),pizza.push(new fatia.construtor())">
     <canvas id="myChart" width="400" height="400">
     </canvas>
     <span style="margin-left: -400px">Insira abaixo o valor e o nome da fatia a ser adicionada.</span>
     <br>
     <input class="item" type="text" placeholder="valor">
-    <input class="nome" type="text" placeholder="nome">
-    <button onclick="fatia()">Adicionar Fatia</button>
+    <input class="rotulo" type="text" placeholder="nome">
+    <button onclick="adicionarFatia()">Adicionar Fatia</button>
 </body>
 
 

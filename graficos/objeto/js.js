@@ -1,52 +1,62 @@
 var fatiasatual = 0, total = 0;
-var pizza = [{numero:0,
-              valor:0,
-              offset:0,
-              cor:"#000000",
-              rotulo:""}];
+var pizza = [];
+              
 var cx = 100, cy = 75, r = 50;
 
 const fatia={
-  numero:fatiasatual,
   valor:0,
   offset:0,
   cor:"#000000",
   rotulo:"",
-  construtor: function(valor,rotulo){
-    if(valor < 0){
-      alert(`Valor ${valor} negativo foi convertido para positivo`);
-      valor = valor * -1;
-    }
-    this.valor = valor;
-    this.rotulo = rotulo;
-    this.cor = "#"+((1<<24)*Math.random()|0).toString(16);
-    // this.offset = 0;
-    if(fatiasatual > 1){
-      this.offset = Number(pizza[fatiasatual-1].valor)+Number(pizza[fatiasatual-1].offset);
-    }
-      total += Number(valor);
-    if(total <= 100){
-      fatiasatual++;
-      //adicionafatia(valor);
-    }else{
-      alert(`Valor total ${total} maior que 100`);
-      total -= Number(x);
-    }
-    console.log(this);
-
-    
-    //novafatia(this.valor,this.rotulo);
+  construtor: function(){
+    this.valor = 0;
+    this.offset = 0;
+    this.cor = "#000000";//"#"+((1<<24)*Math.random()|0).toString(16);
+    this.rotulo = "";
+    fatiasatual++;
     return this;
   }
-
-
-
-
+  // ,
+  // construtor: function(val,nome){
+  //   this.numero = fatiasatual;
+  //   this.valor = Number(val);
+  //   var aux = Number(pizza[Number(this.numero)-1]);
+  //   this.offset = Number(Number(aux.valor));// + Number(pizza[Number(this.numero)-1].offset);
+  //   this.cor = "#"+((1<<24)*Math.random()|0).toString(16);
+  //   this.rotulo = nome;
+  //   fatiasatual++;
+  //   return this;
+  // }
+  
 }
 
-// pizza.push(fatia.construtor(10,"a"));
+  // function pizzaria(){
+  //   pizza.push(new fatia.construtor());
+  // }
 
+  function pizzaria(val, nome){
+    console.log(`val:${val} nome:${nome}`);
 
+    var novafatia = new fatia.construtor();
+    novafatia.valor = val;
+    novafatia.cor = "#"+((1<<24)*Math.random()|0).toString(16);
+    novafatia.rotulo = nome;
+    
+    var aux = Number(pizza[fatiasatual-1]);
+    novafatia.offset = aux.valor; //+ Number(pizza[Number(aux.numero)-1].offset));
+    console.log(aux);
+    fatiasatual++;
+    pizza.push(novafatia);
+  }
+
+  
+  function adicionarFatia(){
+    var val = document.getElementsByClassName("item")[0].value;
+    var nam = document.getElementsByClassName("rotulo")[0].value;
+    pizzaria(val,nam);
+    console.log(pizza);
+  }
+  
 function context(){
   canvas = document.getElementById("myChart");
   if(!canvas.getContext){
@@ -120,3 +130,4 @@ function degtorad(degrees)
   var pi = Math.PI;
   return degrees * (pi/180);
 }
+console.log(`pizza:${pizza}`);
