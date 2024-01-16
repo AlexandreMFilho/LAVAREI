@@ -52,20 +52,21 @@ function desenha(pizza){
     ctx.fillStyle = pizza[i].cor; //seta a cor da fatia
   
   //Desenha a fatia
-  const slice = new Path2D();
+  const imagem = new Path2D();
   ctx.beginPath();
-  slice.moveTo(cx, cy);
-  slice.arc(cx,cy,r,degtorad(x)*3.6,degtorad(y)*3.6,false);
-  slice.lineTo(cx, cy);
-  ctx.fill(slice);
+  imagem.moveTo(cx, cy);
+  imagem.arc(cx,cy,r,degtorad(x)*3.6,degtorad(y)*3.6,false);
+  imagem.lineTo(cx, cy);
+  ctx.fill(imagem);
   
   //Desenha a o bloco da legenda
-  const legenda = new Path2D();
-  legenda.rect(200, 20*(i), 10, 10);
-  ctx.fill(legenda);
+  imagem.rect(200, 20*(i), 10, 10);
+  ctx.fill(imagem);
   
   //Desenha a o bloco da legenda
   ctx.fillText(`${pizza[i].rotulo}: ${pizza[i].valor}%` , 220,10+(20*(i)));
+
+  pizza[i].desenho = imagem;
   }
 }
 
@@ -81,8 +82,8 @@ function cansado(){
 }
 
 
-
-$("#canvas").mousemove(function(e){handleMouseMove(e);});
+cxs = document.getElementById("canvas");
+cxs.mousemove(function(e){handleMouseMove(e);});
 
 
 function handleMouseMove(e){
