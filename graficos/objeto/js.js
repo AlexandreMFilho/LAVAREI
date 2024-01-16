@@ -1,69 +1,9 @@
-var fatiasatual = 0, total = 0;
+var total = 0;
 var pizza = [];
+var fatiasatual = 0;
               
 var cx = 100, cy = 75, r = 50;
 
-const fatia={
-  valor:0,
-  offset:0,
-  cor:"#000000",
-  rotulo:"",
-  construtor: function(){
-    this.valor = 0;
-    this.offset = 0;
-    this.cor = "#000000";//"#"+((1<<24)*Math.random()|0).toString(16);
-    this.rotulo = "";
-    fatiasatual++;
-    return this;
-  }
-  // ,
-  // construtor: function(val,nome){
-  //   this.numero = fatiasatual;
-  //   this.valor = Number(val);
-  //   var aux = Number(pizza[Number(this.numero)-1]);
-  //   this.offset = Number(Number(aux.valor));// + Number(pizza[Number(this.numero)-1].offset);
-  //   this.cor = "#"+((1<<24)*Math.random()|0).toString(16);
-  //   this.rotulo = nome;
-  //   fatiasatual++;
-  //   return this;
-  // }
-  
-}
-
-  // function pizzaria(){
-  //   pizza.push(new fatia.construtor());
-  // }
-
-  function pizzaria(val, nome){
-    console.log(`val:${val} nome:${nome}`);
-
-    var novafatia = new fatia.construtor();
-    novafatia.valor = val;
-    novafatia.cor = "#"+((1<<24)*Math.random()|0).toString(16);
-    novafatia.rotulo = nome;
-    
-    novafatia.offset = Number(pizza[fatiasatual-1].valor)+ Number(pizza[Number(aux.numero)-1].offset); //TODO VER PQ N PEGA
-    console.log(aux);
-
-    fatiasatual++;
-    pizza.push(novafatia);
-  }
-
-  function pedido(fat){
-    for(var i = 0; i < fat.length; i++){
-      pizzaria(fat[i].valor,fat[i].rotulo);
-    }
-  }
-
-  
-  function adicionarFatia(){
-    var val = document.getElementsByClassName("item")[0].value;
-    var nam = document.getElementsByClassName("rotulo")[0].value;
-    pizzaria(Number(val),nam);
-    desenha(pizza);
-    console.log(pizza);
-  }
-  
 function context(){
   canvas = document.getElementById("myChart");
   if(!canvas.getContext){
@@ -75,19 +15,49 @@ function context(){
   }
 }
 
+class fatia{
+
+  constructor(val,nome){
+    this.valor = Number(val);
+    this.cor = nome == "base" ? "#000000" : "#"+((1<<24)*Math.random()|0).toString(16);
+    this.rotulo = nome;
+    this.offset = 0;
+    this.desenho = "";
+  };
+
+  criaoffset(pizza){
+    this.offset= Number(pizza[fatiasatual-1].valor) + Number(pizza[fatiasatual-1].offset);
+  };
+
+  crialegend(pizza){
+    this.legend = `${this.rotulo}: ${this.valor}%`;
+  }
+  
+
+};
+
+function pedido(fat){
+  for(var i = 0; i < fat.length; i++){
+    pizza.push(new fatia(fat[i].valor,fat[i].rotulo));
+    fatiasatual++;
+    pizza[fatiasatual].criaoffset(pizza);
+    desenha(pizza);
+  }
+}
+
 function desenha(pizza){
-  for(var i = 0; i < pizza.length; i++){
-    var x = pizza[i].offset;                                         //TODO VER PQ N PEGA
-    var y = pizza[i].offset + pizza[i].valor;                        //TODO VER PQ N PEGA
+  for(var i = 1; i < pizza.length; i++){
+    var x = pizza[i].offset;                                        
+    var y = pizza[i].offset + pizza[i].valor;                        
     ctx.fillStyle = pizza[i].cor; //seta a cor da fatia
   
   //Desenha a fatia
-  const fatia = new Path2D();
+  const slice = new Path2D();
   ctx.beginPath();
-  fatia.moveTo(cx, cy);
-  fatia.arc(cx,cy,r,degtorad(x)*3.6,degtorad(y)*3.6,false);
-  fatia.lineTo(cx, cy);
-  ctx.fill(fatia);
+  slice.moveTo(cx, cy);
+  slice.arc(cx,cy,r,degtorad(x)*3.6,degtorad(y)*3.6,false);
+  slice.lineTo(cx, cy);
+  ctx.fill(slice);
   
   //Desenha a o bloco da legenda
   const legenda = new Path2D();
@@ -99,66 +69,47 @@ function desenha(pizza){
   }
 }
 
-// function novafatia(valor,rotulo){
-//   //Aquisição de dados (valor e label)
-//   //var x = document.getElementsByClassName("item")[0].value;
-//   //var nome = document.getElementsByClassName("nome")[0].value;
-  
-//   //Verificação de valor negativo
-//   //Caso seja negativo, o valor é convertido para positivo e é exibido um alerta
-//   // if(valor < 0){
-//   //   alert("Valor negativo foi convertido para positivo");
-//   //   valor = valor * -1;
-//   // }
-  
-//   total += Number(valor);
-//   if(total <= 100){
-//     // this.offset = Number(fatia[fatiasatual].valor)+Number(fatia[fatiasatual].offset),
-//     this.offset = Number(pizza[fatiasatual].valor)+Number(pizza[fatiasatual].offset),
-//     fatiasatual++;
-//     //adicionafatia(valor);
-//     console.log(fatia);
-//     console.log(ctx);
-//   }else{
-//     alert(`Valor total ${total} maior que 100`);
-//     total -= Number(x);
-//   }
-//   console.log(total);
-// }
-
-// function adicionafatia(val){
-
-//   var x = Number(fatia[fatiasatual].offset);
-//       y = Number(fatia[fatiasatual].offset) + Number(val);
-//   ctx.fillStyle = fatia[fatiasatual].cor; //seta a cor da fatia
-  
-//   //Desenha a fatia
-//   const pizza = new Path2D();
-//   ctx.beginPath();
-//   pizza.moveTo(cx, cy);
-//   pizza.arc(cx,cy,r,degtorad(x)*3.6,degtorad(y)*3.6,false);
-//   pizza.lineTo(cx, cy);
-//   ctx.fill(pizza);
-//   fatia[fatiasatual].pizza = pizza;
-
-//   //Desenha a o bloco da legenda
-//   const legenda = new Path2D();
-//   legenda.rect(200, 20*(fatiasatual), 10, 10);
-//   ctx.fill(legenda);
-  
-//   //Desenha a o bloco da legenda
-//   ctx.fillText(`${fatia[fatiasatual].rotulo}: ${fatia[fatiasatual].valor}%` , 220,10+(20*(fatiasatual)));
-  
-//   //  pizza.addEventListener("mouseover", function(){
-//   //   alert(fatia[fatiasatual].rotulo+": "+val+"%");
-//   // });
-  
-//   // pizza.setAttribute("hover", alert(fatia[fatiasatual].rotulo+": "+val+"%"));
-// } 
-
 function degtorad(degrees)
 {
   var pi = Math.PI;
   return degrees * (pi/180);
 }
-// console.log(`pizza:${pizza}`);
+
+function cansado(){
+  var a = [{valor:10,rotulo:"a"},{valor:10,rotulo:"b"},{valor:20,rotulo:"c"},{valor:20,rotulo:"d"},{valor:20,rotulo:"e"},{valor:20,rotulo:"f"}];
+  pedido(a);
+}
+
+
+
+$("#canvas").mousemove(function(e){handleMouseMove(e);});
+
+
+function handleMouseMove(e){
+  // tell the browser we're handling this event
+  e.preventDefault();
+  e.stopPropagation();
+
+  mouseX=parseInt(e.clientX-offsetX);
+  mouseY=parseInt(e.clientY-offsetY);
+
+  // clear the canvas
+  ctx.clearRect(0,0,cw,ch);
+
+  for(var i=0;i<pizza.length;i++){
+    var s=pizza[i];
+
+    // define the shape path we want to test against the mouse position
+    defineShape(s.points);
+    // is the mouse insied the defined shape?
+    if(ctx.isPointInPath(mouseX,mouseY)){
+      // if yes, fill the shape in red
+      s.drawcolor='red';
+    }else{
+      // if no, fill the shape with blue
+      s.drawcolor=s.color;
+    }
+
+  }
+  cansado();
+}
