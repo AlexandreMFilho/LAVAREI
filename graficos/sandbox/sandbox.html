@@ -1,0 +1,146 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="utf-8">
+    <title>Sandbox</title>    
+    <style>
+      body {
+        margin: 5;
+        padding: 0;
+      }
+      #concreteContainer {
+        width: 400px;
+        height: 200px;
+        border: 1px solid black;
+      }
+      </style>
+  </head>
+  <body>
+    <div id="concreteContainer">
+      <!-- <canvas></canvas> -->
+    </div>
+    <canvas id="myChart" width="400" height="400"></canvas>
+
+    <script src="./concrete.js"></script>
+    
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/lodash.js/4.17.4/lodash.min.js"></script>
+
+    <script>
+
+      function degtorad(degrees) {
+        var pi = Math.PI;
+        return degrees * (pi / 180);
+      }
+
+      var view = new Concrete.Viewport({
+        container: document.getElementById("concreteContainer"),
+        width: 400,
+        height: 200,
+      });
+
+      var mainLayer = new Concrete.Layer();
+      var hoveredLayer = new Concrete.Layer();
+
+      mainLayer.visible = true;
+      hoveredLayer.visible = true;
+
+      view.add(mainLayer);
+      view.add(hoveredLayer);
+
+      mainLayer.moveToTop();
+
+      var mainSceneContext = mainLayer.scene.context;
+      var hoveredSceneContext = hoveredLayer.scene.context;
+      var mainHitContext = mainLayer.hit.context;
+      
+      mainSceneContext.fillStyle = 'blue';
+      hoveredSceneContext.fillStyle = 'green';
+      mainHitContext.fillStyle = 'red';
+
+      function draw() {
+
+        mainSceneContext.beginPath();
+        // mainSceneContext.moveTo(100, 75);
+        mainSceneContext.arc(100, 75, 50, degtorad(0) * 3.6, degtorad(100) * 3.6, false);
+        // mainSceneContext.lineTo(100, 75);
+        mainSceneContext.fill();
+        mainSceneContext.lineWidth = 1;
+        mainSceneContext.closePath();
+
+        mainHitContext.beginPath();
+        // mainHitContext.moveTo(100, 75);
+        mainHitContext.arc(100, 75, 52, degtorad(0) * 3.6, degtorad(100) * 3.6, false);
+        // mainHitContext.lineTo(100, 75);
+        mainHitContext.fill();
+        mainHitContext.lineWidth = 1;
+        mainHitContext.closePath();
+
+        hoveredSceneContext.beginPath();
+        // hoveredSceneContext.moveTo(100, 75);
+        hoveredSceneContext.arc(100, 75, 51, degtorad(0) * 3.6, degtorad(100) * 3.6, false);
+        // hoveredSceneContext.lineTo(100, 75);
+        hoveredSceneContext.stroke();
+        hoveredSceneContext.lineWidth = 9;
+        hoveredSceneContext.closePath();
+
+        console.log("draw executado.")
+      }
+
+
+      // mainSceneContext.strokeStyle = 'blue';
+      // mainSceneContext.lineCap = 'round';
+
+      // mainHitContext.strokeStyle = mainLayer.hit.getColorFromIndex(0);;
+      // mainHitContext.lineCap = 'round';
+
+      // hoveredSceneContext.strokeStyle = 'green';
+      // hoveredSceneContext.lineCap = 'round';
+
+      draw();
+      view.render();
+
+      concreteContainer.addEventListener('mousemove', _.throttle(function (evt) {
+        var boundingRect = concreteContainer.getBoundingClientRect(),
+          x = evt.clientX - boundingRect.left,
+          y = evt.clientY - boundingRect.top,
+          key = view.getIntersection(x, y);
+
+        if (key >= 0) {
+          hoveredLayer.visible = true;
+          mainLayer.visible = false;
+          view.render();
+        } else {
+          hoveredLayer.visible = false;
+          mainLayer.visible = true;
+          view.render();
+        }
+      }, 10));
+
+
+      //SUGESTÃO DO GPT
+      // concreteContainer.addEventListener('mousemove', _.throttle(function (evt) {
+      //     var boundingRect = concreteContainer.getBoundingClientRect(),
+      //       x = evt.clientX - boundingRect.left,
+      //       y = evt.clientY - boundingRect.top,
+      //       key = view.getIntersection(x, y);
+
+      //     if (key >= 0) {
+      //       hoveredLayer.visible = true;
+
+      //       // Desenhar um círculo no hoveredLayer na posição do mouse
+      //       hoveredSceneContext.beginPath();
+      //       hoveredSceneContext.arc(x, y, 10, 0, Math.PI * 2);
+      //       hoveredSceneContext.fill();
+
+      //       view.render();
+      //     } else {
+      //       hoveredLayer.visible = false;
+      //       view.render();
+      //     }
+      //   }, 100));
+
+
+    </script>
+
+  </body>
+</html>

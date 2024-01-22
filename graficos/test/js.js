@@ -1,91 +1,99 @@
-var canvas=document.getElementById("canvas");
-var ctx=canvas.getContext("2d");
-var cw=canvas.width;
-var ch=canvas.height;
-function reOffset(){
-  var BB=canvas.getBoundingClientRect();
-  offsetX=BB.left;
-  offsetY=BB.top;        
+
+var total = 0;
+var pizza = [];
+var fatiasatual = 0;
+              
+var cx = 100, cy = 75, r = 50;
+
+
+function context(){
+  canvas = document.getElementById("myChart");
+  if(!canvas.getContext){
+    //alert("Seu navegador não suporta canvas");
+  }else{
+    //console.log("Suporte a canvas");
+    ctx = canvas.getContext("2d");
+    ctx.font = "18px serif";
+  }
 }
-var offsetX,offsetY;
-reOffset();
-window.onscroll=function(e){ reOffset(); }
-window.onresize=function(e){ reOffset(); }
 
-ctx.font='14px verdana';
 
-var shapes=[];
+class fatia{
 
-var triangle1={
-  name:'triangle1',
-  color:'skyblue',
-  drawcolor:'skyblue',
-  points:[{x:100,y:100},{x:150,y:150},{x:50,y:150}]
+  constructor(val,nome){
+    this.valor = Number(val);
+    this.cor = nome == "base" ? "#000000" : "#"+((1<<24)*Math.random()|0).toString(16);
+    this.rotulo = nome;
+    this.offset = 0;
+    this.desenho = "";
+    this.layer = "";
+    this.hovered = false;
+    this.selected = false;
+    this.cx = cx;
+    this.cy = cy;
+    this.r = r;
+    this.x = 0;
+    this.y = 0;
+  };
+
+  criaoffset(pizza){
+    this.offset= Number(pizza[fatiasatual-1].valor) + Number(pizza[fatiasatual-1].offset);
+  };
+
+  crialegend(pizza){
+    this.legend = `${this.rotulo}: ${this.valor}%`;
+  }
+
 };
 
-var triangle2={
-  name:'triangle2',
-  color:'palegreen',
-  drawcolor:'palegreen',
-  points:[{x:220,y:100},{x:270,y:150},{x:170,y:150}]
-};
-
-shapes.push(triangle1,triangle2);
-
-$("#canvas").mousemove(function(e){handleMouseMove(e);});
-
-drawAll();
-
-function drawAll(){
-  for(var i=0;i<shapes.length;i++){
-    var s=shapes[i];
-    defineShape(s.points);
-    ctx.fillStyle=s.drawcolor;
-    ctx.fill();
-    ctx.stroke();
-    if(s.color!==s.drawcolor){
-      ctx.fillStyle='black';
-      ctx.fillText(s.name,s.points[0].x,s.points[0].y);
-    }
+function pedido(fat){
+  for(var i = 0; i < fat.length; i++){
+    pizza.push(new fatia(fat[i].valor,fat[i].rotulo));
+    fatiasatual++;
+    pizza[fatiasatual].criaoffset(pizza);
+    desenha(pizza);
   }
 }
 
-
-function defineShape(s){
-  ctx.beginPath();
-  ctx.moveTo(s[0].x,s[0].y);
-  for(var i=1;i<s.length;i++){
-    ctx.lineTo(s[i].x,s[i].y);
-  }
-  ctx.closePath();
-}
-
-function handleMouseMove(e){
-  // tell the browser we're handling this event
-  e.preventDefault();
-  e.stopPropagation();
-
-  mouseX=parseInt(e.clientX-offsetX);
-  mouseY=parseInt(e.clientY-offsetY);
-
-  // clear the canvas
-  ctx.clearRect(0,0,cw,ch);
-
-  for(var i=0;i<shapes.length;i++){
-    var s=shapes[i];
-
-    // define the shape path we want to test against the mouse position
-    defineShape(s.points);
-    // is the mouse insied the defined shape?
-    if(ctx.isPointInPath(mouseX,mouseY)){
-      // if yes, fill the shape in red
-      s.drawcolor='red';
-    }else{
-      // if no, fill the shape with blue
-      s.drawcolor=s.color;
-    }
-
-  }
+function desenha(pizza){
+  for(var i = 1; i < pizza.length; i++){
+    pizza[i].x = pizza[i].offset;
+    pizza[i].y = pizza[i].offset + pizza[i].valor;
+    var x = pizza[i].offset;                                        
+    var y = pizza[i].offset + pizza[i].valor;                        
+    ctx.fillStyle = pizza[i].cor; //seta a cor da fatia
   
-  drawAll();
+  //Desenha a fatia
+  const imagem = new Path2D();
+  ctx.beginPath();
+  imagem.moveTo(cx, cy);
+  imagem.arc(cx,cy,r,degtorad(x)*3.6,degtorad(y)*3.6,false);
+  imagem.lineTo(cx, cy);
+  ctx.fill(imagem);
+  
+  //Desenha o bloco da legenda
+  imagem.rect(200, 20*(i), 10, 10);
+  ctx.fill(imagem);
+  
+  //Desenha a o bloco da legenda
+  ctx.fillText(`${pizza[i].rotulo}: ${pizza[i].valor}%` , 220,10+(20*(i)));
+
+  pizza[i].desenho = imagem;
+  }
 }
+
+function degtorad(degrees)
+{
+  var pi = Math.PI;
+  return degrees * (pi/180);
+}
+
+function cansado(){
+  var a = [{valor:10,rotulo:"a"},{valor:10,rotulo:"b"},{valor:20,rotulo:"c"},{valor:20,rotulo:"d"},{valor:20,rotulo:"e"},{valor:20,rotulo:"f"}];
+  pedido(a);
+}
+
+
+// cxs = document.getElementById("canvas");
+// cxs.mousemove(function(e){handleMouseMove(e);});
+

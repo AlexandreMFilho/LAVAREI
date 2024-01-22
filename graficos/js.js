@@ -30,3 +30,9 @@ function regra3(x){
     return ((x*126)/100.0)
 }
 
+
+function cansado(){
+    var a = [{valor:10,rotulo:"a"},{valor:10,rotulo:"b"},{valor:20,rotulo:"c"},{valor:20,rotulo:"d"},{valor:20,rotulo:"e"},{valor:20,rotulo:"f"}];
+    pedido(a);
+  }
+cansado();

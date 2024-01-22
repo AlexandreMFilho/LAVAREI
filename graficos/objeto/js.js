@@ -32,7 +32,6 @@ class fatia{
   crialegend(pizza){
     this.legend = `${this.rotulo}: ${this.valor}%`;
   }
-  
 
 };
 
@@ -59,7 +58,7 @@ function desenha(pizza){
   imagem.lineTo(cx, cy);
   ctx.fill(imagem);
   
-  //Desenha a o bloco da legenda
+  //Desenha o bloco da legenda
   imagem.rect(200, 20*(i), 10, 10);
   ctx.fill(imagem);
   
@@ -113,4 +112,38 @@ function handleMouseMove(e){
 
   }
   cansado();
+
+  canvas.addEventListener('mousemove', function(evt) {
+    var mousePos = getMousePos(canvas, evt);
+    pizza.forEach(function(fatia) {
+      if (isMouseOver(mousePos, fatia)) {
+        fatia.cor = 'red'; // muda a cor da fatia para vermelho
+      } else {
+        fatia.cor = 'black'; // muda a cor de volta para preto
+      }
+    });
+    desenhaPizza(); // redesenha a pizza com as novas cores
+  }, false);
+  
+  function getMousePos(canvas, evt) {
+    var rect = canvas.getBoundingClientRect();
+    return {
+      x: evt.clientX - rect.left,
+      y: evt.clientY - rect.top
+    };
+  }
+  
+  function isMouseOver(mousePos, fatia) {
+    // verifica se o mouse está sobre a fatia
+    // isso depende de como você está desenhando as fatias
+    // você pode precisar ajustar isso para o seu código específico
+    var dx = mousePos.x - fatia.x;
+    var dy = mousePos.y - fatia.y;
+    return dx * dx + dy * dy <= fatia.r * fatia.r;
+  }
+  
+  function desenhaPizza() {
+    // função para desenhar a pizza
+    // isso deve limpar o canvas e desenhar todas as fatias com suas cores atuais
+  }
 }
