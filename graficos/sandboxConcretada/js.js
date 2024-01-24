@@ -52,10 +52,13 @@ function desenha(pizza){
   ctx = layer.scene.context;
   hv = hover.scene.context;
   hit = layer.hit.context;
-
+  
   for(var i = 1; i < pizza.length; i++){
     var x = pizza[i].offset;                                        
     var y = pizza[i].offset + pizza[i].valor;                        
+    
+    ctx.fillStyle = pizza[i].cor; //seta a cor da fatia
+    hv.fillStyle = 'green'; //seta a cor da fatia
     
     //Desenha a fatia
     ctx.beginPath();
@@ -87,11 +90,9 @@ function desenha(pizza){
     hv.stroke();
     
     //Desenha a legenda
-    ctx.fillStyle = pizza[i].cor; //seta a cor da fatia
     ctx.fillText(`${pizza[i].rotulo}: ${pizza[i].valor}%` , 220,10+(20*(i)));
-
-    hv.fillStyle = 'green'; //seta a cor da fatia
     hv.fillText(`${pizza[i].rotulo}: ${pizza[i].valor}%` , 220,10+(20*(i)));
+    
     
     ctx.closePath();
     // pizza[i].desenho = imagem;
@@ -112,17 +113,37 @@ function cansado(){
 
 concreteContainer.addEventListener('mousemove', function(evt) {
   var boundingRect = concreteContainer.getBoundingClientRect(),
-      x = evt.clientX - boundingRect.left,
-      y = evt.clientY - boundingRect.top,
-      key = view.getIntersection(x, y),
-      hovers = view.Layers;
-      console.log(key);
-      
-      // unhover all circles
-  for(var i = 0; i < hovers.length; i+=2){
-    hovers[i+1].visible = false;
+  x = evt.clientX - boundingRect.left,
+  y = evt.clientY - boundingRect.top,
+  key = view.getIntersection(x, y),
+  hovers;
+  
+  console.log(key);
+  // unhover all circles
+  view.Layers.forEach(function(hovers){
+    hovers.visible = false;
+  })
+
+  if(key >= 0){
+    var slice = getslice(key),
+    index = slice[key];
+    hovers[index+1].visible = true;
   }
+  view.render();
 });
+
+function getslice(key){
+var len = view.Layers.length,
+    n, slice;
+for(n=0; n<len; n+=2) {
+  slice = view.Layers[n]
+  if (slice.key === key) {
+    return slice;
+  }
+}
+return null;
+}
+
 
 // console.log(`pizza:${pizza}`);
 // console.log(`view:${view.layers}`);
