@@ -2,9 +2,9 @@ var pizza = [];
 var cx = 100, cy = 75, r = 50;
 
 var view = new Concrete.Viewport({
-  container: document.getElementById("concreteContainer"),
   width: 400,
   height: 200,
+  container: document.getElementById("concreteContainer"),
 });
 
 class Fatia{
@@ -14,7 +14,8 @@ class Fatia{
     this.rotulo = rotulo;
     this.offset = Number(offset);
     this.key = indice;
-  };  
+    this.hovered;
+  }
 };
 
 function pedido(){
@@ -34,24 +35,22 @@ function pedido(){
 
 function desenha(pizza){
   var layer = new Concrete.Layer();
-  var hover = new Concrete.Layer(); 
   
   layer.visible = true;
-  hover.visible = false;
   
   view.add(layer);
-  view.add(hover);
-  
+  layer.scene.canvas.getContext('2d');
+  layer.hit.canvas.getContext('2d');
   ctx = layer.scene.context;
-  hv = hover.scene.context;
   hit = layer.hit.context;
-  
-  for(var i = 0; i < pizza.length; i++){
-    var x = pizza[i].offset;                                        
-    var y = pizza[i].offset + pizza[i].valor;                        
+
+  var last = pizza.length-1;
+
+    var x = pizza[last].offset;                                        
+    var y = pizza[last].offset + pizza[last].valor;
+
     
-    ctx.fillStyle = pizza[i].cor; //seta a cor da fatia
-    hv.fillStyle = 'green'; //seta a cor da fatia
+    ctx.fillStyle = pizza[last].cor; //seta a cor da fatia
     
     //Desenha a fatia
     ctx.beginPath();
@@ -66,30 +65,27 @@ function desenha(pizza){
     hit.lineTo(cx, cy);
     hit.fill();
     
-    hv.beginPath();
-    hv.moveTo(cx, cy);
-    hv.arc(cx,cy,r+1,degtorad(x)*3.6,degtorad(y)*3.6,false);
-    hv.lineTo(cx, cy);
-    hv.stroke();
-    hv.strokeStyle = 'green';
-    hv.lineWidth = 3;    
-    
     //Desenha o bloco da legenda
-    ctx.rect(200, 20*(i), 10, 10);
+    ctx.rect(200, 20*(last), 10, 10);
     ctx.fill();
     
-    hv.rect(200, 20*(i), 10+2, 10+2);
-    hv.stroke();
     
     //Desenha a legenda
-    ctx.fillText(`${pizza[i].rotulo}: ${pizza[i].valor}%` , 220,10+(20*(i)));
-    hv.fillText(`${pizza[i].rotulo}: ${pizza[i].valor}%` , 220,10+(20*(i)));
+    ctx.fillText(`${pizza[last].rotulo}: ${pizza[last].valor}%` , 220,10+(20*(last)));
     
+    
+    if(pizza[last].hovered){
+      ctx.strokeStyle = 'green';
+      ctx.lineWidth = 3;
+      ctx.moveTo(cx, cy);
+      ctx.arc(cx,cy,r+1,degtorad(x)*3.6,degtorad(y)*3.6,false);
+      ctx.lineTo(cx, cy);
+      ctx.stroke();
+    }
     
     ctx.closePath();
-    // pizza[i].desenho = imagem;
     view.render();
-  }
+
 }
 
 function degtorad(degrees)
@@ -98,35 +94,42 @@ function degtorad(degrees)
   return degrees * (pi/180);
 }
 
-concreteContainer.addEventListener('mousemove', function(evt) {
-  var boundingRect = concreteContainer.getBoundingClientRect(),
-  x = evt.clientX - boundingRect.left,
-  y = evt.clientY - boundingRect.top,
-  key = view.getIntersection(x, y),
-  hovers;
-  
-  console.log(key);
-  // unhover all circles
-  view.Layers.forEach(function(hovers){
-    hovers.visible = false;
-  })
 
-  if(key >= 0){
-    var slice = getslice(key),
-    index = slice[key];
-    hovers[index+1].visible = true;
-  }
-  view.render();
-});
+      // add concrete container handlers
+      concreteContainer.addEventListener('mousemove', function(evt) {
+        var boundingRect = concreteContainer.getBoundingClientRect(),
+            x = evt.clientX - boundingRect.left,
+            y = evt.clientY - boundingRect.top,
+            key = view.getIntersection(x, y),
+            aux;
+        console.log(key);
 
-function getslice(key){
-var len = view.Layers.length,
-    n, slice;
-for(n=0; n<len; n+=2) {
-  slice = view.Layers[n]
-  if (slice.key === key) {
-    return slice;
-  }
-}
-return null;
-}
+        // unhover all circles
+        pizza.forEach(function(aux) {
+          aux.hovered = false;
+        });
+        
+        if (key >= 0) {
+          aux = getCircleFromKey(key);
+          aux.hovered = true;
+        }
+
+        view.render();
+      });
+      
+      function getCircleFromKey(key) {
+        var len = pizza.length,
+        n, aux;
+        console.log(`fez${key}`);
+        
+        for (n=0; n<len; n++) {
+          aux = pizza[n];
+          if (aux.key === key) {
+            return aux;
+          }
+        }
+
+        return null;
+      }
+
+
