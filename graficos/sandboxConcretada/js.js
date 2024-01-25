@@ -1,7 +1,4 @@
-var total = 0;
 var pizza = [];
-var fatiasatual = 0;
-              
 var cx = 100, cy = 75, r = 50;
 
 var view = new Concrete.Viewport({
@@ -11,30 +8,20 @@ var view = new Concrete.Viewport({
 });
 
 class Fatia{
-
-  constructor(val,nome,indice){
+  constructor(val,cor,rotulo,offset,indice){
     this.valor = Number(val);
-    this.cor = nome == "base" ? "#000000" : "#"+((1<<24)*Math.random()|0).toString(16);
-    this.rotulo = nome;
-    this.offset = 0;
+    this.cor = cor;
+    this.rotulo = rotulo;
+    this.offset = Number(offset);
     this.key = indice;
-  };
-
-  criaoffset(pizza){
-    this.offset= Number(pizza[fatiasatual-1].valor) + Number(pizza[fatiasatual-1].offset);
-  };
-
-  crialegend(pizza){
-    this.legend = `${this.rotulo}: ${this.valor}%`;
-  }
-
+  };  
 };
 
 function pedido(fat){
+  var offset = 0;
   for(var i = 0; i < fat.length; i++){
-    pizza.push(new Fatia(fat[i].valor,fat[i].rotulo,i));
-    fatiasatual++;
-    pizza[fatiasatual].criaoffset(pizza);
+    pizza.push(new Fatia(fat[i].valor,fat[i].cor,fat[i].rotulo,offset,i));
+    offset = Number(offset+fat[i].valor);
     desenha(pizza);
   }
 }
@@ -53,7 +40,7 @@ function desenha(pizza){
   hv = hover.scene.context;
   hit = layer.hit.context;
   
-  for(var i = 1; i < pizza.length; i++){
+  for(var i = 0; i < pizza.length; i++){
     var x = pizza[i].offset;                                        
     var y = pizza[i].offset + pizza[i].valor;                        
     
@@ -79,8 +66,7 @@ function desenha(pizza){
     hv.lineTo(cx, cy);
     hv.stroke();
     hv.strokeStyle = 'green';
-    hv.lineWidth = 3;
-    
+    hv.lineWidth = 3;    
     
     //Desenha o bloco da legenda
     ctx.rect(200, 20*(i), 10, 10);
@@ -104,11 +90,6 @@ function degtorad(degrees)
 {
   var pi = Math.PI;
   return degrees * (pi/180);
-}
-
-function cansado(){
-  var a = [{valor:10,rotulo:"a"},{valor:10,rotulo:"b"},{valor:20,rotulo:"c"},{valor:20,rotulo:"d"},{valor:20,rotulo:"e"},{valor:20,rotulo:"f"}];
-  pedido(a);
 }
 
 concreteContainer.addEventListener('mousemove', function(evt) {
@@ -143,9 +124,13 @@ for(n=0; n<len; n+=2) {
 }
 return null;
 }
-
-
-// console.log(`pizza:${pizza}`);
-// console.log(`view:${view.layers}`);
-
-
+    
+function cansado(){
+      var a = [ {valor:10,cor:"#fcba03",rotulo:"a"},
+                {valor:10,cor:"#03fc3d",rotulo:"b"},
+                {valor:20,cor:"#0377fc",rotulo:"c"},
+                {valor:20,cor:"#d703fc",rotulo:"d"},
+                {valor:20,cor:"#411d47",rotulo:"e"},
+                {valor:20,cor:"#656d73",rotulo:"f"}];
+      pedido(a);
+}
