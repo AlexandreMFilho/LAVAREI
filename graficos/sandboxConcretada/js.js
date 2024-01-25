@@ -17,11 +17,17 @@ class Fatia{
   };  
 };
 
-function pedido(fat){
+function pedido(){
+  var a = [ {valor:10,cor:"#fcba03",rotulo:"a"},
+            {valor:10,cor:"#03fc3d",rotulo:"b"},
+            {valor:20,cor:"#0377fc",rotulo:"c"},
+            {valor:20,cor:"#d703fc",rotulo:"d"},
+            {valor:20,cor:"#411d47",rotulo:"e"},
+            {valor:20,cor:"#656d73",rotulo:"f"}];
   var offset = 0;
-  for(var i = 0; i < fat.length; i++){
-    pizza.push(new Fatia(fat[i].valor,fat[i].cor,fat[i].rotulo,offset,i));
-    offset = Number(offset+fat[i].valor);
+  for(var i = 0; i < a.length; i++){
+    pizza.push(new Fatia(a[i].valor,a[i].cor,a[i].rotulo,offset,i));
+    offset = Number(offset+a[i].valor);
     desenha(pizza);
   }
 }
@@ -123,14 +129,4 @@ for(n=0; n<len; n+=2) {
   }
 }
 return null;
-}
-    
-function cansado(){
-      var a = [ {valor:10,cor:"#fcba03",rotulo:"a"},
-                {valor:10,cor:"#03fc3d",rotulo:"b"},
-                {valor:20,cor:"#0377fc",rotulo:"c"},
-                {valor:20,cor:"#d703fc",rotulo:"d"},
-                {valor:20,cor:"#411d47",rotulo:"e"},
-                {valor:20,cor:"#656d73",rotulo:"f"}];
-      pedido(a);
 }
