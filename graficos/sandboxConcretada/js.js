@@ -66,12 +66,12 @@ function desenha(pizza){
     hit.fill();
     
     //Desenha o bloco da legenda
-    ctx.rect(200, 20*(last), 10, 10);
+    ctx.rect(200, 20+(20*(last)), 10, 10);
     ctx.fill();
     
-    
+
     //Desenha a legenda
-    ctx.fillText(`${pizza[last].rotulo}: ${pizza[last].valor}%` , 220,10+(20*(last)));
+    ctx.fillText(`${pizza[last].rotulo}: ${pizza[last].valor}%` , 220,30+(20*(last)));
     
     
     if(pizza[last].hovered){
