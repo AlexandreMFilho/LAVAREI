@@ -9,10 +9,10 @@ var view = new Concrete.Viewport({
 
 class Fatia{
   constructor(val,cor,rotulo,offset,indice){
-    this.valor = Number(val);
+    this.valor = val;
     this.cor = cor;
     this.rotulo = rotulo;
-    this.offset = Number(offset);
+    this.offset = offset;
     this.key = indice;
     this.hovered;
   }
@@ -29,18 +29,18 @@ function pedido(){
   for(var i = 0; i < a.length; i++){
     pizza.push(new Fatia(a[i].valor,a[i].cor,a[i].rotulo,offset,i));
     offset = Number(offset+a[i].valor);
-    desenha(pizza);
+    desenha(pizza,i);
   }
 }
 
-function desenha(pizza){
+function desenha(pizza, key){
   var layer = new Concrete.Layer();
-  
+  layer.id = key;
   layer.visible = true;
   
   view.add(layer);
-  layer.scene.canvas.getContext('2d');
-  layer.hit.canvas.getContext('2d');
+  //layer.scene.canvas.getContext('2d');
+  //layer.hit.canvas.getContext('2d');
   ctx = layer.scene.context;
   hit = layer.hit.context;
 
@@ -100,19 +100,29 @@ function degtorad(degrees)
         var boundingRect = concreteContainer.getBoundingClientRect(),
             x = evt.clientX - boundingRect.left,
             y = evt.clientY - boundingRect.top,
-            key = view.getIntersection(x, y),
+            key,
             aux;
-        console.log(key);
-
         // unhover all circles
         pizza.forEach(function(aux) {
           aux.hovered = false;
         });
+
+        view.layers.forEach(function(layer) {
+          if(layer.hit.getIntersection(x, y)!=-1){
+            key = layer.id;
+            console.log(key)
+            pizza[key].hovered = true;
+            // console.log(key);
+            // pizza[key].hovered = true;
+          }
+        });
+
+       
         
-        if (key >= 0) {
-          aux = getCircleFromKey(key);
-          aux.hovered = true;
-        }
+        // if (key >= 0) {
+        //   aux = getCircleFromKey(key);
+        //   aux.hovered = true;
+        // }
 
         view.render();
       });
@@ -120,11 +130,11 @@ function degtorad(degrees)
       function getCircleFromKey(key) {
         var len = pizza.length,
         n, aux;
-        console.log(`fez${key}`);
         
         for (n=0; n<len; n++) {
           aux = pizza[n];
           if (aux.key === key) {
+            console.log(`fez${aux}`);
             return aux;
           }
         }
