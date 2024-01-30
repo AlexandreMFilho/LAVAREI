@@ -1,9 +1,21 @@
-var pizza = [];
-var cx = 100, cy = 75, r = 50;
+var pizza = [],
+
+    cx = 300, cy = 300, r = 200,
+
+    espacamento_bloco_y = 50, tamanho_bloco = 30,x_bloco = cx+250,//y_bloco = 20,
+
+    x_legenda = x_bloco+50, y_legenda = 20,font_legenda = "20px Arial",
+    centro_legenda = 40,largura_legenda = 350,
+
+    x_info = x_bloco, y_info = cy+50, largura_info = 400, altura_info = 200,
+
+    cor_realce = "rgb(255 0 0 / 50%)";
+
+
 
 var view = new Concrete.Viewport({
-  width: 800,
-  height: 200,
+  width: 1000,
+  height: 600,
   container: document.getElementById("concreteContainer"),
 });
 
@@ -58,9 +70,10 @@ function desenha(pizza,layer){
   
   ctx = layer.scene.context;
   hit = layer.hit.context;
+  ctx.font = font_legenda;
   key = layer.id;
-  var x = pizza.offset;              
-  var y = pizza.offset + pizza.valor;
+  var x = pizza.offset,              
+      y = pizza.offset + pizza.valor;
 
   ctx.fillStyle = pizza.cor; //seta a cor da fatia
   
@@ -72,18 +85,26 @@ function desenha(pizza,layer){
   ctx.fill();
 
   //Desenha o bloco da legenda
-  ctx.rect(200, 20+(20*(key)), 10, 10);
+  ctx.rect(x_bloco, 20+(espacamento_bloco_y*(key)), tamanho_bloco, tamanho_bloco);
   ctx.fill();
   
   //Desenha a legenda
-  ctx.fillText(`${pizza.rotulo}: ${pizza.valor}%` , 220,30+(20*(key)));
+  ctx.fillText(`${pizza.rotulo}: ${pizza.valor}%` , x_legenda,centro_legenda+(espacamento_bloco_y*(key)));
   ctx.closePath();
   
-  hit.beginPath();
+  //HIT
+  hit.beginPath();      //HIT_fatia
   hit.moveTo(cx, cy);
   hit.arc(cx,cy,r,degtorad(x)*3.6,degtorad(y)*3.6,false);
   hit.lineTo(cx, cy);
   hit.fill();
+                        //HIT_bloco
+  hit.rect(x_bloco, 20+(espacamento_bloco_y*(key)), tamanho_bloco, tamanho_bloco);
+  hit.fill();
+                        //HIT_legenda
+  hit.rect(x_legenda, 20+(espacamento_bloco_y*(key)), largura_legenda, tamanho_bloco);
+  hit.fill();
+
   hit.closePath();
 
   view.render();
@@ -110,7 +131,7 @@ function mostraHover(pizza,layer,hv){
   //Isso pode vir a ser uma nova layer de fundo:
   //Bloco lateral
   ctx.beginPath();
-  ctx.fillRect(300, 5, 400, 200);
+  ctx.fillRect(x_info, y_info, largura_info, altura_info);
   ctx.closePath();
   
   //Desenha a fatia
@@ -119,19 +140,19 @@ function mostraHover(pizza,layer,hv){
   ctx.arc(cx,cy,r+1,degtorad(x)*3.6,degtorad(y)*3.6,false);
   ctx.lineWidth = 3;
   ctx.lineTo(cx, cy);
-  ctx.strokeStyle = 'red';
+  ctx.strokeStyle = cor_realce;
   ctx.stroke();
   ctx.closePath();
 
   //Desenha o bloco da legenda
-  ctx.rect(200, 20+(20*(key)), 10, 10);
+  ctx.rect(x_bloco, 20+(espacamento_bloco_y*(key)), tamanho_bloco, tamanho_bloco);
   ctx.stroke();
   ctx.closePath();
 
   //Realça a legenda
   ctx.beginPath();
-  ctx.rect(220, 20+(20*(key)), 50, 10);
-  ctx.fillStyle = "rgb(105 105 105 / 50%)";
+  ctx.rect(x_legenda, 20+(espacamento_bloco_y*(key)), largura_legenda, tamanho_bloco);
+  ctx.fillStyle = cor_realce;
   ctx.fill();
   ctx.closePath();
 }
