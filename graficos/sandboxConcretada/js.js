@@ -10,9 +10,9 @@ var pizza = [],
     x_info = x_bloco, y_info = cy+50, largura_info = 400, altura_info = 200,
 
     cor_realce = "rgb(255 0 0 / 50%)",
-    rosquinha = true;
+    rosquinha = false;
 
-    
+
 var view = new Concrete.Viewport({
   width: 1000,
   height: 600,
@@ -127,7 +127,7 @@ function degtorad(degrees)
 }
 
 
-function mostraHover(pizza,layer,hv){
+function mostraHover(pizza,layer,hv,mouse_x,mouse_y){
   hv.scene.clear();
   hv.visible = true;
   ctx = hv.scene.context;
@@ -147,6 +147,8 @@ function mostraHover(pizza,layer,hv){
   ctx.font = font_legenda;
   ctx.fillText(`Rótulo: ${pizza.rotulo}` , x_info+20,y_info+30);
   ctx.fillText(`Valor: ${pizza.valor}%` , x_info+20,y_info+60);
+  ctx.fillText(`${pizza.rotulo}: ${pizza.valor}%` , mouse_x+5,mouse_y+30);
+  
   ctx.closePath();
   
   //Desenha a fatia
@@ -204,7 +206,7 @@ concreteContainer.addEventListener('mousemove', function(evt) {
       key = layer.id;
       console.log(key)
       pizza[key].hovered = true;
-      mostraHover(pizza[key],view.layers[key],view.layers[view.layers.length-1]);
+      mostraHover(pizza[key],view.layers[key],view.layers[view.layers.length-1],x,y);
     }
     if(key == undefined)view.layers[view.layers.length-1].visible = false;
   });
