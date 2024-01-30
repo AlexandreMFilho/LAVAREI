@@ -1,18 +1,18 @@
 var pizza = [],
 
-    cx = 300, cy = 300, r = 200,
+    cx = 300, cy = 300, r = 250,
 
-    espacamento_bloco_y = 50, tamanho_bloco = 30,x_bloco = cx+250,//y_bloco = 20,
+    espacamento_bloco_y = 50, tamanho_bloco = 30,x_bloco = cx+r+50,//y_bloco = 20,
 
     x_legenda = x_bloco+50, y_legenda = 20,font_legenda = "20px Arial",
     centro_legenda = 40,largura_legenda = 350,
 
     x_info = x_bloco, y_info = cy+50, largura_info = 400, altura_info = 200,
 
-    cor_realce = "rgb(255 0 0 / 50%)";
+    cor_realce = "rgb(255 0 0 / 50%)",
+    rosquinha = true;
 
-
-
+    
 var view = new Concrete.Viewport({
   width: 1000,
   height: 600,
@@ -70,13 +70,12 @@ function desenha(pizza,layer){
   
   ctx = layer.scene.context;
   hit = layer.hit.context;
-  ctx.font = font_legenda;
   key = layer.id;
   var x = pizza.offset,              
       y = pizza.offset + pizza.valor;
 
   ctx.fillStyle = pizza.cor; //seta a cor da fatia
-  
+
   //Desenha a fatia
   ctx.beginPath();
   ctx.moveTo(cx, cy);
@@ -89,6 +88,7 @@ function desenha(pizza,layer){
   ctx.fill();
   
   //Desenha a legenda
+  ctx.font = font_legenda;
   ctx.fillText(`${pizza.rotulo}: ${pizza.valor}%` , x_legenda,centro_legenda+(espacamento_bloco_y*(key)));
   ctx.closePath();
   
@@ -106,6 +106,15 @@ function desenha(pizza,layer){
   hit.fill();
 
   hit.closePath();
+
+  if(rosquinha){
+    //Desenha circulo central
+    ctx.beginPath();
+    ctx.arc(cx,cy,r/4,degtorad(0)*3.6,degtorad(100)*3.6,false);
+    ctx.fillStyle = 'white';
+    ctx.fill();
+    ctx.closePath();
+  }
 
   view.render();
 }
@@ -133,6 +142,12 @@ function mostraHover(pizza,layer,hv){
   ctx.beginPath();
   ctx.fillRect(x_info, y_info, largura_info, altura_info);
   ctx.closePath();
+
+  ctx.fillStyle = 'black';
+  ctx.font = font_legenda;
+  ctx.fillText(`Rótulo: ${pizza.rotulo}` , x_info+20,y_info+30);
+  ctx.fillText(`Valor: ${pizza.valor}%` , x_info+20,y_info+60);
+  ctx.closePath();
   
   //Desenha a fatia
   ctx.beginPath();
@@ -140,13 +155,14 @@ function mostraHover(pizza,layer,hv){
   ctx.arc(cx,cy,r+1,degtorad(x)*3.6,degtorad(y)*3.6,false);
   ctx.lineWidth = 3;
   ctx.lineTo(cx, cy);
-  ctx.strokeStyle = cor_realce;
-  ctx.stroke();
+  ctx.fillStyle = cor_realce;
+  ctx.fill();
   ctx.closePath();
 
   //Desenha o bloco da legenda
   ctx.rect(x_bloco, 20+(espacamento_bloco_y*(key)), tamanho_bloco, tamanho_bloco);
   ctx.stroke();
+  ctx.strokeStyle = cor_realce;
   ctx.closePath();
 
   //Realça a legenda
@@ -155,6 +171,16 @@ function mostraHover(pizza,layer,hv){
   ctx.fillStyle = cor_realce;
   ctx.fill();
   ctx.closePath();
+
+  if(rosquinha){
+    ctx.beginPath();
+    ctx.arc(cx,cy,r/4,degtorad(0)*3.6,degtorad(100)*3.6,false);
+    ctx.fillStyle = 'white';
+    ctx.fill();
+    ctx.fillStyle = 'black';
+    ctx.fillText(`${pizza.rotulo}: ${pizza.valor}%` , cx-30,cy+5);
+    ctx.closePath();
+  }
 }
 
 
