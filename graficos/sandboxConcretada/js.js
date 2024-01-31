@@ -10,7 +10,7 @@ var pizza = [],
     x_info = x_bloco, y_info = cy+50, largura_info = 400, altura_info = 200,
 
     cor_realce = "rgb(255 0 0 / 50%)",
-    rosquinha = false;
+    rosquinha = true, espessura_rosca = r/4;
 
 
 var view = new Concrete.Viewport({
@@ -176,11 +176,16 @@ function mostraHover(pizza,layer,hv,mouse_x,mouse_y){
 
   if(rosquinha){
     ctx.beginPath();
-    ctx.arc(cx,cy,r/4,degtorad(0)*3.6,degtorad(100)*3.6,false);
+    ctx.arc(cx,cy,espessura_rosca,degtorad(0)*3.6,degtorad(100)*3.6,false);
     ctx.fillStyle = 'white';
     ctx.fill();
     ctx.fillStyle = 'black';
     ctx.fillText(`${pizza.rotulo}: ${pizza.valor}%` , cx-30,cy+5);
+    ctx.fillStyle = cor_realce;
+    ctx.closePath();
+    ctx.beginPath();
+    ctx.arc(cx,cy,1+(espessura_rosca),degtorad(x)*3.6,degtorad(y)*3.6,false);
+    ctx.stroke();
     ctx.closePath();
   }
 }
