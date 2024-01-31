@@ -1,9 +1,21 @@
-var pizza = [];
-var cx = 100, cy = 75, r = 50;
+var pizza = [],
+
+    cx = 300, cy = 300, r = 250,
+
+    espacamento_bloco_y = 50, tamanho_bloco = 30,x_bloco = cx+r+50,//y_bloco = 20,
+
+    x_legenda = x_bloco+50, y_legenda = 20,font_legenda = "20px Arial",
+    centro_legenda = 40,largura_legenda = 350,
+
+    x_info = x_bloco, y_info = cy+50, largura_info = 400, altura_info = 200,
+
+    cor_realce = "rgb(255 0 0 / 50%)",
+    rosquinha = true, espessura_rosca = r/4;
+
 
 var view = new Concrete.Viewport({
-  width: 800,
-  height: 200,
+  width: 1000,
+  height: 600,
   container: document.getElementById("concreteContainer"),
 });
 
@@ -59,11 +71,11 @@ function desenha(pizza,layer){
   ctx = layer.scene.context;
   hit = layer.hit.context;
   key = layer.id;
-  var x = pizza.offset;              
-  var y = pizza.offset + pizza.valor;
+  var x = pizza.offset,              
+      y = pizza.offset + pizza.valor;
 
   ctx.fillStyle = pizza.cor; //seta a cor da fatia
-  
+
   //Desenha a fatia
   ctx.beginPath();
   ctx.moveTo(cx, cy);
@@ -72,19 +84,37 @@ function desenha(pizza,layer){
   ctx.fill();
 
   //Desenha o bloco da legenda
-  ctx.rect(200, 20+(20*(key)), 10, 10);
+  ctx.rect(x_bloco, 20+(espacamento_bloco_y*(key)), tamanho_bloco, tamanho_bloco);
   ctx.fill();
   
   //Desenha a legenda
-  ctx.fillText(`${pizza.rotulo}: ${pizza.valor}%` , 220,30+(20*(key)));
+  ctx.font = font_legenda;
+  ctx.fillText(`${pizza.rotulo}: ${pizza.valor}%` , x_legenda,centro_legenda+(espacamento_bloco_y*(key)));
   ctx.closePath();
   
-  hit.beginPath();
+  //HIT
+  hit.beginPath();      //HIT_fatia
   hit.moveTo(cx, cy);
   hit.arc(cx,cy,r,degtorad(x)*3.6,degtorad(y)*3.6,false);
   hit.lineTo(cx, cy);
   hit.fill();
+                        //HIT_bloco
+  hit.rect(x_bloco, 20+(espacamento_bloco_y*(key)), tamanho_bloco, tamanho_bloco);
+  hit.fill();
+                        //HIT_legenda
+  hit.rect(x_legenda, 20+(espacamento_bloco_y*(key)), largura_legenda, tamanho_bloco);
+  hit.fill();
+
   hit.closePath();
+
+  if(rosquinha){
+    //Desenha circulo central
+    ctx.beginPath();
+    ctx.arc(cx,cy,r/4,degtorad(0)*3.6,degtorad(100)*3.6,false);
+    ctx.fillStyle = 'white';
+    ctx.fill();
+    ctx.closePath();
+  }
 
   view.render();
 }
@@ -97,7 +127,7 @@ function degtorad(degrees)
 }
 
 
-function mostraHover(pizza,layer,hv){
+function mostraHover(pizza,layer,hv,mouse_x,mouse_y){
   hv.scene.clear();
   hv.visible = true;
   ctx = hv.scene.context;
@@ -110,7 +140,15 @@ function mostraHover(pizza,layer,hv){
   //Isso pode vir a ser uma nova layer de fundo:
   //Bloco lateral
   ctx.beginPath();
-  ctx.fillRect(300, 5, 400, 200);
+  ctx.fillRect(x_info, y_info, largura_info, altura_info);
+  ctx.closePath();
+
+  ctx.fillStyle = 'black';
+  ctx.font = font_legenda;
+  ctx.fillText(`Rótulo: ${pizza.rotulo}` , x_info+20,y_info+30);
+  ctx.fillText(`Valor: ${pizza.valor}%` , x_info+20,y_info+60);
+  ctx.fillText(`${pizza.rotulo}: ${pizza.valor}%` , mouse_x+5,mouse_y+30);
+  
   ctx.closePath();
   
   //Desenha a fatia
@@ -119,21 +157,37 @@ function mostraHover(pizza,layer,hv){
   ctx.arc(cx,cy,r+1,degtorad(x)*3.6,degtorad(y)*3.6,false);
   ctx.lineWidth = 3;
   ctx.lineTo(cx, cy);
-  ctx.strokeStyle = 'red';
-  ctx.stroke();
+  ctx.fillStyle = cor_realce;
+  ctx.fill();
   ctx.closePath();
 
   //Desenha o bloco da legenda
-  ctx.rect(200, 20+(20*(key)), 10, 10);
+  ctx.rect(x_bloco, 20+(espacamento_bloco_y*(key)), tamanho_bloco, tamanho_bloco);
   ctx.stroke();
+  ctx.strokeStyle = cor_realce;
   ctx.closePath();
 
   //Realça a legenda
   ctx.beginPath();
-  ctx.rect(220, 20+(20*(key)), 50, 10);
-  ctx.fillStyle = "rgb(105 105 105 / 50%)";
+  ctx.rect(x_legenda, 20+(espacamento_bloco_y*(key)), largura_legenda, tamanho_bloco);
+  ctx.fillStyle = cor_realce;
   ctx.fill();
   ctx.closePath();
+
+  if(rosquinha){
+    ctx.beginPath();
+    ctx.arc(cx,cy,espessura_rosca,degtorad(0)*3.6,degtorad(100)*3.6,false);
+    ctx.fillStyle = 'white';
+    ctx.fill();
+    ctx.fillStyle = 'black';
+    ctx.fillText(`${pizza.rotulo}: ${pizza.valor}%` , cx-30,cy+5);
+    ctx.fillStyle = cor_realce;
+    ctx.closePath();
+    ctx.beginPath();
+    ctx.arc(cx,cy,1+(espessura_rosca),degtorad(x)*3.6,degtorad(y)*3.6,false);
+    ctx.stroke();
+    ctx.closePath();
+  }
 }
 
 
@@ -157,7 +211,7 @@ concreteContainer.addEventListener('mousemove', function(evt) {
       key = layer.id;
       console.log(key)
       pizza[key].hovered = true;
-      mostraHover(pizza[key],view.layers[key],view.layers[view.layers.length-1]);
+      mostraHover(pizza[key],view.layers[key],view.layers[view.layers.length-1],x,y);
     }
     if(key == undefined)view.layers[view.layers.length-1].visible = false;
   });
