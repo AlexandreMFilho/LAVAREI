@@ -1,16 +1,22 @@
-var pizza = [],
-
-    cx = 300, cy = 300, r = 250,
-
-    espacamento_bloco_y = 50, tamanho_bloco = 30,x_bloco = cx+r+50,//y_bloco = 20,
-
-    x_legenda = x_bloco+50, y_legenda = 20,font_legenda = "20px Arial",
-    centro_legenda = 40,largura_legenda = 350,
-
-    x_info = x_bloco, y_info = cy+50, largura_info = 400, altura_info = 200,
-
-    cor_realce = "rgb(255 0 0 / 50%)",
-    rosquinha = true, espessura_rosca = r/4;
+const pizza = [];
+const cx = 300;
+const cy = 300;
+const r = 250;
+const espacamento_bloco_y = 50;
+const tamanho_bloco = 30;
+const x_bloco = cx+r+50;
+//const y_bloco = 20;
+const x_legenda = x_bloco+50;
+const y_legenda = 20;
+const font_legenda = "20px Arial";
+const centro_legenda = 40;
+const largura_legenda = 350;
+const x_info = x_bloco;
+const y_info = cy+50;
+const largura_info = 400;
+const altura_info = 200;
+const cor_realce = "rgb(255 0 0 / 50%)";
+const rosquinha = true, espessura_rosca = r/4;
 
 
 var view = new Concrete.Viewport({
@@ -25,7 +31,11 @@ class Fatia{
     this.valor = val;
     this.cor = cor;
     this.rotulo = rotulo;
-    this.offset = offset;
+    this.offset = (
+      !offset
+        ? 0
+        : offset
+      );
     this.key = indice;
     this.hovered = false;
   }
@@ -39,10 +49,8 @@ function pedido(){
             {valor:20,cor:"#d703fc",rotulo:"d"},
             {valor:20,cor:"#411d47",rotulo:"e"},
             {valor:20,cor:"#656d73",rotulo:"f"}];
-  var offset = 0;
   for(var i = 0; i < a.length; i++){
-    pizza.push(new Fatia(a[i].valor,a[i].cor,a[i].rotulo,offset,i));
-    offset = Number(offset+a[i].valor);
+    pizza.push(new Fatia(a[i].valor, a[i].cor,a[i].rotulo, pizza[i - 1]?.offset + a[i - 1]?.valor, i));
     inicializa(i);
     desenha(pizza[i],view.layers[i]);
   }
