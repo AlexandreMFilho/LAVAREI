@@ -1,35 +1,22 @@
-## Criando uma factory para Edital
+## Criando uma factory
 
-```sail artisan make:factory Model/Proatec/EditalModel```
+```php artisan make:factory {NomedaModel}```
 
-Será gerada uma Model-Factory para Edital. Onde gera-se os nomes, descrições e datas que serão usadas no banco de dados.
+Será gerada uma Factory. Onde gera-se os os dados das colunas da tabela que serão usadas no banco de dados.
 
-* O Código abaixo é gerado automaticamente pelo laravel
-* E serve para gerar dados para a tabela edital
-* Referente ao model EditalModel
-* Foi adicionado o faker para gerar dados fake para a tabela
-* Como um prototipo de dados
 
 # Exemplo criação de Factory
 
-Nesse documento temos os principais comandos e códigos para ciar uma facoty para o backend do projeto
+Nesse documento temos os principais comandos e códigos para criar uma factory para o backend do projeto.
 
-## criação do shell
-```shell
-sail artisan make:factory Model/Procad/ProcessoModelFactory
-```
+TODO: Explicar como a factory sabe qual é a sua respectiva entidade
 
 ## Códido para gerar a factory
 
-1. Importar class use Illuminate\Support\Str;
-
-```php
-use use Illuminate\Support\Str;
-
-```
-
 1. Preparar o retorno da Factory
    
+* O Código abaixo é gerado automaticamente pelo laravel e serve para gerar dados para a tabela.
+
 ```php
     public function definition(): array
     {
@@ -44,61 +31,24 @@ use use Illuminate\Support\Str;
         ];
     } 
 ```
-
-```
-history  | grep -i fact
-```
+Foi adicionado o faker para gerar dados fake para a tabela como um prototipo de dados. Para mais informações pesquisar sobre a biblioteca do método faker.
 
 # Execução da factory
 #### Caminho para a execução da factory:
 
-1. Abra o terminal:
-  ``` Ctrl + J```
-<br>
-
 1. Execute o comando: 
 
-  
-
 ```shell 
- sail artisan tinker
+ php artisan tinker
 ```
    >* Este comando é responsável por **abrir o terminal php**.
 
-3. Execute o comando:
+2. Execute o comando:
 ```php
-App\Models\Model\Procad\ProcessoModel::factory(10)->create();
+App\Models\{caminhoParaSuaModel}::factory(10)->create();
 ```
-
  > * Este comando é responsavel por **popular o banco de dados**.
 
-#### Exemplificação:
- Ao executarmos os comandos no terminal:
-
-
- O terminal nos retorna:
-
-
-   > = Illuminate\Database\Eloquent\Collection {#6665
-    all: [
-      App\Models\Model\Procad\ProcessoModel {#6695
-        id_docente: 40,
-        data_inicio: Illuminate\Support\Carbon @1700672120 {#6668
-          date: 2023-11-22 13:55:20.877594 America/Sao_Paulo (-03:00),
-        },
-        data_termino: Illuminate\Support\Carbon @1700672120 {#6669
-          date: 2023-11-22 13:55:20.877628 America/Sao_Paulo (-03:00),
-        },
-        resumo: "Iste molestias.",
-  
-
- 
-  > * Indica os registros que foram criados.<br>
-###### Ao  executarmos o seguinte código no Banco de dados:
-```  sql 
-Select * from procad.processo p 
-``````
-
-Podemos verificar os registros criados:
+Podemos verificar os registros criados usando o dbeaver ou instanciando uma [Service](../Resumo/10_Service.md) :
 ![Alt text](imgs/image-4.png)
 

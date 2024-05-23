@@ -12,7 +12,7 @@ Por exemplo, uma classe ***UserController*** pode lidar com todas as solicitaç�
 
 Que irá criar uma classe pré-pronta:
 
-```
+```php
 <?php
  
 namespace App\Http\Controllers;
@@ -37,7 +37,7 @@ class UserController extends Controller
 * Depois de escrever uma classe e um método do controlador, você pode definir uma rota para o método do controlador da seguinte forma:
 
 
-```
+```php
 use App\Http\Controllers\UserController;
  
 Route::get('/user/{id}', [UserController::class, 'show']);

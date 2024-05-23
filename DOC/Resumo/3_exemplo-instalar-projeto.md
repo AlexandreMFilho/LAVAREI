@@ -1,6 +1,6 @@
 # Instalando o projeto
 
-Com o repositório clonado em sua máquina, e com privilégios de administrador (```sudo su```) acesse a pasta `app` em seu terminal e execute o comando:
+Com o repositório clonado em sua máquina, e com privilégios de administrador (```sudo su```) e execute o comando:
 
 ```
 composer update
