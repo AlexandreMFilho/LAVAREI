@@ -4,7 +4,7 @@ As migrations desempenham um papel crucial, comparável ao controle de versão d
 
 Através da **facade** do Laravel Schema, é possível contar com suporte independente de banco de dados para criar e manipular tabelas em todos os sistemas suportados pelo Laravel. 
 
-* Pode-se usar o comando ```make:migration Artisan``` para gerar uma migration para o banco de dados. A migration criada será colocada em seu diretório ```database/migrations```. Cada nome de arquivo de migração contém um carimbo de data/hora que permite ao Laravel determinar a ordem das migrações.
+* Pode-se usar o comando ```php artisan make:migration {NomedaMigration}``` para gerar uma migration para o banco de dados. A migration criada será colocada em seu diretório ```database/{Nomedamigration}```. Cada nome de arquivo de migração contém um carimbo de data/hora que permite ao Laravel determinar a ordem das migrações.
 
 ```php artisan make:migration create_flights_table```
 
@@ -18,7 +18,7 @@ Uma classe de migração contém dois métodos: up e down.
 
 O método **up** é usado para adicionar novas tabelas, colunas ou índices ao seu banco de dados, enquanto o método **down** deve reverter as operações realizadas pelo método up.
 
-```
+```php
 <?php
 
 use Illuminate\Database\Migrations\Migration;
@@ -57,12 +57,66 @@ return new class extends Migration
 };
 
 ```
+## Multiplas tabelas na Migration
+
+Para executar multiplas tabelas na migration, você tem que escrever as tabelas respeitando a sua ordem de relacionamento, escrevendo primeiro as que não possuem nenhum relacionamento, em seguida as que se relacionam.
+
+```php
+<?php
+
+use Illuminate\Database\Migrations\Migration;
+use Illuminate\Database\Schema\Blueprint;
+use Illuminate\Support\Facades\Schema;
+
+return new class extends Migration
+{
+    /**
+     * Run the migrations.
+     */
+    public function up(): void
+    {
+        Schema::create('sistema.curso', function (Blueprint $table) {
+            $table->id();
+            $table->string('nome');
+            $table->string('código',11)->unique();
+            $table->timestamps();
+        });
+
+            Schema::create('sistema.disciplina', function (Blueprint $table) {
+            $table->id();
+            $table->string('nome');
+            $table->string('sigla',5)->unique();
+            $table->timestamps();
+        });
+
+            Schema::create('sistema.curso_disciplina', function (Blueprint $table) {
+            $table->id();
+            $table->foreignId(id_curso)->constraint()->references('id')->on("sistema.curso");;
+            $table->foreignId(id_disciplina)->constraint()->references('id')->on("sistema.disciplina");;
+            $table->timestamps();
+        });
+    }
+
+    /**
+     * Reverse the migrations.
+     */
+    public function down(): void
+    {
+        Schema::dropIfExists('sistema.curso_disciplina');
+        Schema::dropIfExists('sistema.curso');
+        Schema::dropIfExists('sistema.disciplina');
+    }
+};
+
+```
+
+Neste caso para a utilização do método down primeiro deve-se deletar as tabelas que possuem as relações e em seguida todas que não as possuem.
 
 # Configurando a conexão de migração
 
 * Se a migration estiver interagindo com uma conexão de banco de dados diferente da conexão de banco de dados padrão do seu aplicativo, você deverá definir a propriedade `$connection` da sua migração:
 
-```
+```php
 protected $connection = 'pgsql';
  
 public function up(): void
