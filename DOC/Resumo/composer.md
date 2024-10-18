@@ -45,6 +45,10 @@ Criando um arquivo `composer.json` ou rodando o comando `composer init` e digita
 
 ```
 
+#### Onde encontrar os pacotes do composer
+
+O composer busca os pacotes no site `packagist.com`, ele é o buscador principal do composer, mas é possível configurar o composer para buscar de outros lugares, como github, zip e etc.
+
 
 
 
